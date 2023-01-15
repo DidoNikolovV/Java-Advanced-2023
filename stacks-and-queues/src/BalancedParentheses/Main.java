@@ -21,16 +21,20 @@ public class Main {
         }
 
         boolean areBalanced = true;
-        while(openingParentheses.size() > 0) {
-            char currentOpeningBracket = openingParentheses.poll();
-            char currentClosingBracket = closingParentheses.pop();
-            if(currentOpeningBracket == '(' && (currentClosingBracket == '}' || currentClosingBracket == ']')) {
-                areBalanced = false;
-            } else if(currentOpeningBracket == '{' && (currentClosingBracket == ')' || currentClosingBracket == ']')) {
-                areBalanced = false;
-            } else if(currentOpeningBracket == '[' && (currentClosingBracket == ')' || currentClosingBracket == '}')) {
-                areBalanced = false;
+        if(openingParentheses.size() == closingParentheses.size()) {
+            while(openingParentheses.size() > 0) {
+                char currentOpeningBracket = openingParentheses.poll();
+                char currentClosingBracket = closingParentheses.pop();
+                if(currentOpeningBracket == '(' && (currentClosingBracket == '}' || currentClosingBracket == ']')) {
+                    areBalanced = false;
+                } else if(currentOpeningBracket == '{' && (currentClosingBracket == ')' || currentClosingBracket == ']')) {
+                    areBalanced = false;
+                } else if(currentOpeningBracket == '[' && (currentClosingBracket == ')' || currentClosingBracket == '}')) {
+                    areBalanced = false;
+                }
             }
+        } else {
+            areBalanced = false;
         }
 
         if(areBalanced) {

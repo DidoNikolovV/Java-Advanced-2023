@@ -4,16 +4,26 @@ import java.util.ArrayDeque;
 import java.util.Scanner;
 
 public class Main {
+
+    public static long[] memory;
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int n = Integer.parseInt(scanner.nextLine());
+        memory = new long[n + 1];
+        long result = fibonacci(n);
+        System.out.println(result);
     }
 
-    public static int fibonacci(int n) {
-        if(n <= 1) {
+    public static long fibonacci(int n) {
+        if(n < 2) {
             return 1;
         }
 
-        return fibonacci(n - 1) + fibonacci( n - 2);
+        if(memory[n] !=0) {
+            return memory[n];
+        }
+
+        memory[n] = fibonacci(n - 1) + fibonacci( n - 2);
+        return memory[n];
     }
 }
