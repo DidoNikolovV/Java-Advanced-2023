@@ -1,0 +1,2 @@
+D:\Java-Advanced-2023\streams-files-directories\04. Java-Advanced-Files-and-Streams-Lab-Resources\Files-and-Streams\input.txt
+D:\Java-Advanced-2023\streams-files-directories\04. Java-Advanced-Files-and-Streams-Lab-Resources\Files-and-Streams\output.txt
