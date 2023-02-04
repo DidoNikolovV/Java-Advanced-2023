@@ -6,15 +6,10 @@ import java.util.Arrays;
 public class ArrayCreator {
 
     public static<T> T[] create(int length, T item) {
-        Class<?> clazz = item.getClass();
-        T[] arr = (T[])Array.newInstance(clazz, length);
-
-        Arrays.fill(arr, item);
-
-        return arr;
+        return create(item.getClass(), length, item);
     }
 
-    public static<T> T[] create(Class<T> clazz, int length, T item) {
+    public static<T> T[] create(Class<?> clazz, int length, T item) {
         T[] arr = (T[])Array.newInstance(clazz, length);
 
         Arrays.fill(arr, item);
