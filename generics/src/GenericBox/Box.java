@@ -1,6 +1,7 @@
 package GenericBox;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Box<T> {
@@ -13,6 +14,7 @@ public class Box<T> {
     public void add(T element) {
         this.values.add(element);
     }
+
 
     @Override
     public String toString() {

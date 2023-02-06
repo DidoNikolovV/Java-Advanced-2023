@@ -15,7 +15,9 @@ public class Main {
             box.add(text);
         }
 
+
         String result = box.toString();
         System.out.println(result);
     }
+
 }
