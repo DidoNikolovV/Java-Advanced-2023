@@ -35,6 +35,9 @@ public class Main {
                 case "Min":
                     System.out.println(myList.getMin());
                     break;
+                case "Sort":
+                    Sorter.sort(myList);
+                    break;
                 case "Print":
                     System.out.println(myList.toString());;
                     break;

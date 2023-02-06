@@ -11,6 +11,14 @@ public class CustomList<T extends Comparable> {
         this.values = new ArrayList<>();
     }
 
+    public int size() {
+        return values.size();
+    }
+
+    public T get(int index) {
+        return values.get(index);
+    }
+
     public void add(T element) {
         this.values.add(element);
     }
