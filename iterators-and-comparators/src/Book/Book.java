@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Book {
+public class Book implements Comparable<Book> {
     private String title;
     private int year;
     private List<String> authors;
@@ -37,5 +37,15 @@ public class Book {
 
     public void setAuthors(String... authors) {
         this.authors = Arrays.asList(authors);
+    }
+
+    public int compareTo(Book other) {
+        int result = this.title.compareTo(other.getTitle());
+
+        if(result == 0) {
+            result = this.getYear() - other.getYear();
+        }
+
+        return result;
     }
 }
