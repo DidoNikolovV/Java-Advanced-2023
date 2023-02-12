@@ -1,4 +1,4 @@
-package softUni;
+package RetakeExam_14_December.softUni;
 
 public class Student {
     private String firstName;

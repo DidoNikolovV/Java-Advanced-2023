@@ -1,4 +1,4 @@
-package softUni;
+package RetakeExam_14_December.softUni;
 
 public class Main {
     public static void main(String[] args) {
