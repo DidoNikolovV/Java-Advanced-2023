@@ -1,5 +1,7 @@
 package barracksWars.core;
 
+import barracksWars.core.commands.Command;
+import barracksWars.core.commands.NamedCommand;
 import barracksWars.interfaces.Repository;
 import barracksWars.interfaces.Runnable;
 import barracksWars.interfaces.Unit;
@@ -10,11 +12,19 @@ import jdk.jshell.spi.ExecutionControl;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 public class Engine implements Runnable {
 
 	private Repository repository;
 	private UnitFactory unitFactory;
+	List<Class<?>> registeredCommand = new ArrayList<>();
 
 	public Engine(Repository repository, UnitFactory unitFactory) {
 		this.repository = repository;
@@ -43,39 +53,57 @@ public class Engine implements Runnable {
 		}
 	}
 
+	public void registerCommand(Class<?> commandClass) {
+		NamedCommand annotation = commandClass.getAnnotation(NamedCommand.class);
+		if(annotation == null) {
+			throw new IllegalArgumentException("Expected " + commandClass.getSimpleName() + " to have a " + NamedCommand.class.getSimpleName() + " annotation");
+		}
+
+		registeredCommand.add(commandClass);
+
+	}
+
 	// TODO: refactor for problem 4
 	private String interpretCommand(String[] data, String commandName) throws ExecutionControl.NotImplementedException {
-		String result;
-		switch (commandName) {
-			case "add":
-				result = this.addUnitCommand(data);
-				break;
-			case "report":
-				result = this.reportCommand(data);
-				break;
-			case "fight":
-				result = this.fightCommand(data);
-				break;
-			default:
-				throw new RuntimeException("Invalid command!");
+		Command command = buildCommand(data, commandName);
+
+		if(command == null) {
+			throw new IllegalArgumentException("Can't find command " + commandName);
 		}
-		return result;
+
+		return command.execute();
+
 	}
 
-	private String reportCommand(String[] data) {
-		String output = this.repository.getStatistics();
-		return output;
+	private Command buildCommand(String[] data, String commandName) {
+		Command command = null;
+		for (Class<?> registeredCommandClass : registeredCommand) {
+			NamedCommand annotation = registeredCommandClass.getAnnotation(NamedCommand.class);
+			if(annotation.commandName().equals(commandName)) {
+				try {
+					command = (Command)registeredCommandClass.getConstructor(String[].class).newInstance((Object) data);
+
+					Optional<Field> repositoryField = Stream.of(registeredCommandClass.getDeclaredFields()).filter(f -> f.getType().equals(Repository.class)).findFirst();
+					if(repositoryField.isPresent()) {
+						Field field = repositoryField.get();
+						field.setAccessible(true);
+						field.set(command, repository);
+						field.setAccessible(false);
+					}
+
+					Optional<Field> unitFactoryField = Stream.of(registeredCommandClass.getDeclaredFields()).filter(f -> f.getType().equals(UnitFactory.class)).findFirst();
+					if(unitFactoryField.isPresent()) {
+						Field field = unitFactoryField.get();
+						field.setAccessible(true);
+						field.set(command, unitFactory);
+					}
+				} catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
+						 IllegalAccessException e) {
+					throw new IllegalStateException(e);
+				}
+			}
+		}
+		return command;
 	}
 
-	private String addUnitCommand(String[] data) throws ExecutionControl.NotImplementedException {
-		String unitType = data[1];
-		Unit unitToAdd = this.unitFactory.createUnit(unitType);
-		this.repository.addUnit(unitToAdd);
-		String output = unitType + " added!";
-		return output;
-	}
-	
-	private String fightCommand(String[] data) {
-		return "fight";
-	}
 }

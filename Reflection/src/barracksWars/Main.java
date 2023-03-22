@@ -1,5 +1,9 @@
 package barracksWars;
 
+import barracksWars.core.commands.AddUnitCommand;
+import barracksWars.core.commands.FightCommand;
+import barracksWars.core.commands.ReportCommand;
+import barracksWars.core.commands.RetireCommand;
 import barracksWars.interfaces.Repository;
 import barracksWars.interfaces.Runnable;
 import barracksWars.interfaces.UnitFactory;
@@ -13,7 +17,11 @@ public class Main {
         Repository repository = new UnitRepository();
         UnitFactory unitFactory = new UnitFactoryImpl();
 
-        Runnable engine = new Engine(repository, unitFactory);
+        Engine engine = new Engine(repository, unitFactory);
+        engine.registerCommand(AddUnitCommand.class);
+        engine.registerCommand(FightCommand.class);
+        engine.registerCommand(ReportCommand.class);
+        engine.registerCommand(RetireCommand.class);
         engine.run();
     }
 }
